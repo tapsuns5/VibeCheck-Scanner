@@ -1,3 +1,5 @@
+![VibeCheck Logo](https://drive.google.com/uc?id=1_PkhtWysnMWCN_0ZVV7wvRxCzDRR6dpn)
+
 # vibecheck
 
 A lightweight codebase checker CLI that scans repos for common security footguns across:
@@ -30,6 +32,7 @@ vibecheck scan
 
 # Scan a specific directory
 vibecheck scan /path/to/repo
+vibecheck scan --stack auto # Auto-detect tech stack
 
 # Specify tech stack (auto-detects by default)
 vibecheck scan --stack nextjs
@@ -37,7 +40,6 @@ vibecheck scan --stack vite
 vibecheck scan --stack nestjs
 
 # Specify auth framework (auto-detects by default)
-vibecheck scan --auth auto
 vibecheck scan --auth nextauth
 vibecheck scan --auth clerk
 vibecheck scan --auth betterauth
