@@ -1,0 +1,35 @@
+{
+  "ignore": [
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/*.min.*"
+  ],
+  "ruleOverrides": {
+    "next-async-waterfall": {
+      "severity": "info",
+      "exclude": ["app/api/**", "**/route.ts", "**/route.tsx"]
+    },
+    "next-client-env-leak": {
+      "severity": "off"
+    }
+  },
+  "output": {
+    "minSeverity": "medium",
+    "maxFindingsPerRule": 25
+  },
+  "publicApiRoutePatterns": [
+    "app/api/health/**",
+    "app/api/og/**",
+    "app/api/embed-proxy/**",
+    "app/api/stripe/webhook/**"
+  ],
+  "auth": {
+    "guards": ["getServerSession", "auth", "requireAuthedWorkspace"],
+    "publicApiExact": ["/api/health"],
+    "publicApiPrefix": ["/api/embed-proxy"],
+    "proxyApiPrefix": ["/api/stripe/webhook", "/api/og"]
+  }
+}
