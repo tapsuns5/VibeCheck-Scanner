@@ -37,6 +37,7 @@ vibecheck scan --stack vite
 vibecheck scan --stack nestjs
 
 # Specify auth framework (auto-detects by default)
+vibecheck scan --auth auto
 vibecheck scan --auth nextauth
 vibecheck scan --auth clerk
 vibecheck scan --auth betterauth
