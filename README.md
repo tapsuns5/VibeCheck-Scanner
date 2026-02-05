@@ -6,6 +6,7 @@ A lightweight codebase checker CLI that scans repos for common security footguns
 - Next.js (App Router)
 - Vite
 - NestJS
+- Supabase
 - Prisma (heuristics)
 
 ## Install

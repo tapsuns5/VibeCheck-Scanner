@@ -13,8 +13,13 @@ import { viteClientEnvLeakRule } from "./vite/clientEnvLeak.js";
 
 import { prismaMissingTenantFilterRule } from "./prisma/missingTenantFilter.js";
 import { prismaWriteTenantBoundaryRule } from "./prisma/writeTenantBoundary.js";
+import { supabaseClientUsageRule } from "./supabase/clientUsage.js";
+import { supabaseFundamentalsRule } from "./supabase/fundamentals.js";
+import { supabaseRLSValidationRule } from "./supabase/rlsValidation.js";
+import { supabaseServiceRoleKeyRule } from "./supabase/serviceRoleKey.js";
 import { nextHeavyClientImportsRule } from "./next/heavyClientImports.js";
 import { nextAsyncWaterfallRule } from "./next/asyncWaterfall.js";
+import { nextAsyncClientComponentRule } from "./next/asyncClientComponent.js";
 
 export const ALL_RULES: Rule[] = [
   corsWildcardCredentialsRule,
@@ -26,6 +31,7 @@ export const ALL_RULES: Rule[] = [
   nextMiddlewareMatcherCoverageRule,
   nextHeavyClientImportsRule,
   nextAsyncWaterfallRule,
+  nextAsyncClientComponentRule,
 
   // Vite
   viteClientEnvLeakRule,
@@ -36,6 +42,12 @@ export const ALL_RULES: Rule[] = [
   // Prisma (shared)
   prismaMissingTenantFilterRule,
   prismaWriteTenantBoundaryRule,
+
+  // Supabase
+  supabaseClientUsageRule,
+  supabaseFundamentalsRule,
+  supabaseRLSValidationRule,
+  supabaseServiceRoleKeyRule,
 ];
 
 export function rulesForStack(stack: StackName): Rule[] {
