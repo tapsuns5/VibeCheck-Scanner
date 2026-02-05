@@ -44,9 +44,13 @@ function isClientComponent(code: string) {
   return clientPatterns.some(pattern => pattern.test(code));
 }
 
+function isPascalCase(name: string): boolean {
+  return typeof name === 'string' && /^[A-Z]/.test(name);
+}
+
 export const nextAsyncClientComponentRule: Rule = {
   id: "next-async-client-component",
-  description: "Detects async functions in client components, which can cause hydration issues.",
+  description: "Detects async client components, which are not allowed in React.",
   stack: ["nextjs", "vite", "auto"],
 
   async run(ctx) {
@@ -60,6 +64,8 @@ export const nextAsyncClientComponentRule: Rule = {
       if (!code) continue;
       if (!isClientComponent(code)) continue;
 
+      // Only flag async component declarations (PascalCase names)
+      
       // Regex for async function declarations with PascalCase names (components)
       const functionDeclRe = /\basync\s+function\s+([A-Z]\w*)\s*\(/g;
       let m: RegExpExecArray | null;
@@ -72,24 +78,8 @@ export const nextAsyncClientComponentRule: Rule = {
           severity: "high",
           file: abs,
           ...firstLineCol(code, idx),
-          message: `Async client component '${name}' detected. Avoid async components in 'use client' files to prevent hydration issues.`,
-          fixHint: "Move async logic to server components or use useEffect for client-side async operations.",
-        });
-      }
-
-      // Regex for any async function declarations (functions)
-      const functionAnyDeclRe = /\basync\s+function\s+(\w+)\s*\(/g;
-
-      while ((m = functionAnyDeclRe.exec(code))) {
-        const name = m[1];
-        const idx = m.index ?? 0;
-        out.push({
-          ruleId: "next-async-client-component",
-          severity: "high",
-          file: abs,
-          ...firstLineCol(code, idx),
-          message: `Async function '${name}' in client component detected. Avoid async functions in 'use client' files to prevent hydration issues.`,
-          fixHint: "Move async logic to useEffect, server components, or use proper error handling with try-catch.",
+          message: `Async client component '${name}' detected. Client components cannot be async functions.`,
+          fixHint: "Move async logic to useEffect, server components, or create a separate async function inside the component.",
         });
       }
 
@@ -104,29 +94,13 @@ export const nextAsyncClientComponentRule: Rule = {
           severity: "high",
           file: abs,
           ...firstLineCol(code, idx),
-          message: `Async client component '${name}' detected. Avoid async components in 'use client' files to prevent hydration issues.`,
-          fixHint: "Move async logic to server components or use useEffect for client-side async operations.",
+          message: `Async client component '${name}' detected. Client components cannot be async functions.`,
+          fixHint: "Move async logic to useEffect, server components, or create a separate async function inside the component.",
         });
       }
 
-      // Regex for any const/let/var declarations with async arrow functions (functions)
-      const arrowAnyRe = /\b(?:const|let|var)\s+(\w+)\s*=\s*async\s*\(/g;
-
-      while ((m = arrowAnyRe.exec(code))) {
-        const name = m[1];
-        const idx = m.index ?? 0;
-        out.push({
-          ruleId: "next-async-client-component",
-          severity: "high",
-          file: abs,
-          ...firstLineCol(code, idx),
-          message: `Async function '${name}' in client component detected. Avoid async functions in 'use client' files to prevent hydration issues.`,
-          fixHint: "Move async logic to useEffect, server components, or use proper error handling with try-catch.",
-        });
-      }
-
-      // Regex for export default async function
-      const exportDefaultAsyncRe = /\bexport\s+default\s+async\s+(?:function\s+([A-Z]\w*)\s*\(|function\s*\(| \()/g;
+      // Regex for export default async function (components)
+      const exportDefaultAsyncRe = /\bexport\s+default\s+async\s+(?:function\s+([A-Z]\w*)\s*\(|function\s*\(|\()/g;
 
       while ((m = exportDefaultAsyncRe.exec(code))) {
         const name = m[1] || "default";
@@ -136,12 +110,12 @@ export const nextAsyncClientComponentRule: Rule = {
           severity: "high",
           file: abs,
           ...firstLineCol(code, idx),
-          message: `Async client component '${name}' detected. Avoid async components in 'use client' files to prevent hydration issues.`,
-          fixHint: "Move async logic to server components or use useEffect for client-side async operations.",
+          message: `Async client component '${name}' detected. Client components cannot be async functions.`,
+          fixHint: "Move async logic to useEffect, server components, or create a separate async function inside the component.",
         });
       }
 
-      // Regex for export const/let/var with async
+      // Regex for export const/let/var with async and PascalCase (components)
       const exportNamedAsyncRe = /\bexport\s+(?:const|let|var)\s+([A-Z]\w*)\s*=\s*async\s*\(/g;
 
       while ((m = exportNamedAsyncRe.exec(code))) {
@@ -152,8 +126,8 @@ export const nextAsyncClientComponentRule: Rule = {
           severity: "high",
           file: abs,
           ...firstLineCol(code, idx),
-          message: `Async client component '${name}' detected. Avoid async components in 'use client' files to prevent hydration issues.`,
-          fixHint: "Move async logic to server components or use useEffect for client-side async operations.",
+          message: `Async client component '${name}' detected. Client components cannot be async functions.`,
+          fixHint: "Move async logic to useEffect, server components, or create a separate async function inside the component.",
         });
       }
     }
